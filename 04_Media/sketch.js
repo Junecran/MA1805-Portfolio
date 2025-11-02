@@ -1,4 +1,4 @@
-  
+   
    // -- Settings -- //
 let sensitivity = 1; 
 let mic;
@@ -9,19 +9,20 @@ let rainVariant = 0;
 let micStarted = false;
 let keyX, keyY, spacing;
 let walkFrames = [];
-let frameSpeed = 15; // Speed animaton
+let frameSpeed = 15; // Speed animation.
 let walkers = [];
-let numWalkers = 5; // Number of walking people
+let particles = [];
+let numWalkers = 5; // Number of walking people.
 
 
    // -- Image preload -- //
 function preload() {
   for (let i = 1; i <= 4; i++) {
-    walkFrames.push(loadImage(`walking${i}.png`));
+    walkFrames.push(loadImage("walking" + i + ".png"));
   }
 }
 
-
+ 
    // -- Setup -- //
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -29,7 +30,7 @@ function setup() {
   fill(255);
   textAlign(CENTER);
 
-// Initialize multiple walkers
+  // Multiple walkers
   for (let i = 0; i < numWalkers; i++) {
     walkers.push({
       x: random(width),
@@ -48,6 +49,12 @@ function setup() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   updateKeyPositions();  
+  
+    for (let w of walkers) {
+    // Move walkers proportionally if window width changes
+    w.x = constrain(w.x, 0, width);   // Make sure x stays on screen
+    w.y = height - 100;      
+    }
 }
 
   // Controls Display //
@@ -61,7 +68,7 @@ function ControlsKey() {
   text("Noise = Rain Strength & Lightning", keyX, keyY);
   text("↑ : Increase Mic Sensitivity", keyX, keyY + spacing);
   text("↓ : Decrease Mic Sensitivity", keyX, keyY + spacing * 2);
-  text("Sensitivity: " + nf(sensitivity, 1, 1), keyX, keyY + spacing * 3);
+  text("Sensitivity: " + round(sensitivity, 1, 1), keyX, keyY + spacing * 3);
   text("Click to Start/Stop Mic", keyX, keyY + spacing * 4);
 }
 
@@ -73,7 +80,7 @@ function updateKeyPositions() {
   spacing = fontSize * 1.2;          
 }
 
-// Sensitivity Key //
+  // Sensitivity Key //
 function keyPressed() {
   if (keyCode === UP_ARROW) sensitivity = min(sensitivity + 0.1, 3);
   if (keyCode === DOWN_ARROW) sensitivity = max(sensitivity - 0.1, 0.2);
@@ -81,8 +88,8 @@ function keyPressed() {
 
   // Raindrop Function //
 function createDrop() {
-  let r = random(0, 20);
-  return {
+  let r = random(0, 20); // Size factor
+  let drop = {
     x: random(width),
     y: random(-400, 0),
     r: r,
@@ -90,19 +97,27 @@ function createDrop() {
     yspeed: map(r, 0, 20, 4, 10),
     xspeed: rainVariant * r * 0.2 + random(-0.5, 0.5)
   };
+
+  raindrops.push(drop);
 }
 
   // Splash Function //
 function createSplash(x, y) {
-  return {
-    particles: Array.from({ length: 5 }, () => ({
-      x,
-      y,
+ let particles = [];
+ for (let i = 0; i < 5; i++) {
+  let particle = {
+      x: x,
+      y: y,
       vx: random(-1, 1),
       vy: random(-3, -1),
       alpha: 100
-    }))
+    };
+    particles.push(particle);
+  }
+    let splash = {
+    particles: particles
   };
+    splashes.push(splash);
 }
 
   // Toggle Mic //
@@ -119,12 +134,12 @@ function mousePressed() {
   }
 }
 
-  
+
    // -- Canvas -- //
 function draw() {
   background(20, 30, 60);
 
-  // Mic Status 
+   // Mic Status //
   let fontSize = min(width, height) * 0.025;
   textSize(fontSize);
   textAlign(LEFT, CENTER);
@@ -133,35 +148,36 @@ function draw() {
 
   if (!micStarted) {
     ControlsKey();
-    return;
+    return; // Important here.
   }
 
-    // Volume to rain //
+   // Volume to Rain //
   let vol = mic.getLevel() * sensitivity;
-  let rainIntensity = vol > 0.1 ? 200 : vol > 0.05 ? 50 : 0;
+  if (vol > 0.1) { rainIntensity = 200; } 
+  else if (vol > 0.05) {rainIntensity = 50; } 
+  else { rainIntensity = 0; }
   rainVariant = map(noise(frameCount * 0.01), 0, 1, -1, 1);
 
-    // Raindrops //
+   // Raindrops //
   for (let i = 0; i < rainIntensity / 3; i++) {
-    raindrops.push(createDrop());
+    createDrop(); 
   }
-
   // Raindrop logic
   for (let i = raindrops.length - 1; i >= 0; i--) {
     let rd = raindrops[i];
     rd.y += rd.yspeed;
     rd.x += rd.xspeed;
-    stroke(173, 216, 230, 140); // Rain colour and alpha levels
+    stroke(173, 216, 230, 140); // Rain colour and alpha
     line(rd.x, rd.y, rd.x, rd.y + rd.len);
 
-    // Collision with any walker
+    // Collision with walkers
     let hit = false;
     for (let w of walkers) {
-      if (rd.x > w.x - w.w / 2 &&
+      if (rd.x > w.x - w.w / 2 && // Shortcut names.
           rd.x < w.x + w.w / 2 &&
           rd.y + rd.len > w.y - w.h / 2 &&
           rd.y < w.y + w.h / 2) {
-        splashes.push(createSplash(rd.x, w.y + w.h / 2));
+        createSplash(rd.x, w.y + w.h / 2); 
         hit = true;
         break;
       }
@@ -172,23 +188,23 @@ function draw() {
     }
 
     if (rd.y > height) {
-      if (random() < 0.3) splashes.push(createSplash(rd.x, height));
+      if (random() < 0.3) createSplash(rd.x, height);
       raindrops.splice(i, 1);
     }
   }
 
-  // Splashes
+  // Splashes 
   for (let i = splashes.length - 1; i >= 0; i--) {
     let sp = splashes[i];
     for (let p of sp.particles) {
       p.x += p.vx;
       p.y += p.vy;
       p.vy += 0.1;
-      p.alpha -= 10;
+      p.alpha -= 10; // Fade alpha level.
     }
     noStroke();
     for (let p of sp.particles) {
-      fill(173, 216, 230, p.alpha);
+      fill(173, 216, 230, p.alpha); // Colours for splashes.
       ellipse(p.x, p.y, 2, 2);
     }
     if (sp.particles.every(p => p.alpha <= 0)) {
@@ -199,7 +215,7 @@ function draw() {
   // Lightning
   if (vol > 0.15) lightningAlpha = 255;
   if (lightningAlpha > 0) {
-    fill(255, 255, 255, lightningAlpha); // Colour of lighting with alpha levels below.
+    fill(255, 255, 255, lightningAlpha);
     rect(0, 0, width, height);
     lightningAlpha -= 1;
   }
@@ -210,12 +226,10 @@ function draw() {
     imageMode(CENTER);
     image(walkFrames[frameIndex], w.x, w.y, 100, 100);
 
-    // Walker position
+  // Walker position
     w.x += w.speed;
     if (w.x > width + 50) w.x = -50;
-
-    // Hitbox size
-    w.w = 50;
+    w.w = 40;
     w.h = 100;
   }
 

@@ -116,6 +116,7 @@ Apparently, when you have loops inside loops, it’s common to use 'j':
 - forEach = simplicity / readability  e.g.'points.forEach(([x, y]) => vertex(x, y));'
 - for = 'points' control / better for animated code  e.g.'for (let i = 0; i < points.length - 1; i++)'
 
+**Splice** - A method adds and/or removes array elements or can be used method overwrites the original array.
 
 
 
