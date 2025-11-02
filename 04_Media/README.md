@@ -1,22 +1,35 @@
 # **Media**
- sketch uses microphone input (sound) to generate rain and lightning — a natural, emotional metaphor. can frame this as a reflection on how sound and emotion shape perception of the environment.
+This code transforms microphone input into a storm of rain and lightning, inviting a reflection on how sound and emotion shape the world around us. Each raindrop becomes a word, washing over people and subtly shifting the atmosphere of their lives. Words fall like rain, bringing cleansing, renewal, or sometimes a touch of sadness. It is a living metaphor for the way communication weaves through our existence. As voices rise, the rain intensifies, echoing the energy of a protest chant.
 
-Integrate images or video that represent cultural associations with rain (renewal, melancholy, cleansing, climate change, etc.).
+Although the metaphor may appear abstract, I view it as a valuable opportunity for creative exploration.
 
-Use audio not just as input, but as meaningful content (e.g. spoken word, protest chants, rainfall sounds).
-
-Reflect on how your visual choices reshape those cultural meanings — e.g., turning noise (chaos) into something beautiful and natural.
 **Design Choices**
-- couldnt find a png that fit the style so found a way to make a parcticle without
 
+- To encourage open interpretation, I chose to keep the imagery simple.
+
+- I would have preferred to keep the key in the left-hand corner, outside, to convey a strong message as you figure out how the code works. I put it there for easy testing and marking.
+
+- I believe the lighting would have added a shock factor if it had not been mentioned on the key.
+
+- I added collision to the rain to portray the 'effect words have on people' message.
 
 
 ## Debrief
-- wanted to explore rain sounds link to mic 
-- key resize feature 
-- adding image
+Unfortunately, I did not have the time to explore a lot of ideas for the feature in the code, such as:
 
-- wanting some notes on my code
+- Producing Rain sounds from the microphone status without affecting it.
+
+- Exploring different cultural imagery /or smoother animations 
+
+- A hidden feature on the key, so it doesn't have to affect the visuals. 
+
+- video involvement 
+
+- Smoother collision with rain on people
+
+There is still much to explore within this theme. I enjoyed the research process and ventured into animation by creating my own set of walking figures, which I am proud of. I also hope to find more effective coding methods and a better balance between documenting code and maintaining clarity.
+
+
 ## References Used
 
 - Made my own little walking animation with - https://ucbugg-adfa.wixsite.com/adfa/animation-lab-2-walk-cycles
