@@ -27,6 +27,8 @@ Unfortunately, I did not have the time to explore a lot of ideas for the feature
 
 - Smoother collision with rain on people
 
+Also i got a bit burned out with making notes.
+
 There is still much to explore within this theme. I enjoyed the research process and ventured into animation by creating my own set of walking figures, which I am proud of. I also hope to find more effective coding methods and a better balance between documenting code and maintaining clarity.
 
 
